@@ -32,7 +32,8 @@ getPortsStatus <- function(host, ports, max.sessions) {
       httpuv::stopServer(tmp);
       ports$status[[i]] <- 'Av';
     }
-    if (sum(ports$status %in% c('Av', 'Full')) == max.sessions)
+    if (sum(ports$status %in% c('Av', 'Full')) == max.sessions ||
+        is.infinite(max.sessions))
       break;
   }
 

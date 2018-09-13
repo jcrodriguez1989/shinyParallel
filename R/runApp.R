@@ -56,10 +56,10 @@
 #' @examples
 #' \dontrun{
 #' # Start app in the current working directory
-#' runApp()
+#' shinyParallel::runApp()
 #'
 #' # Start app in a subdirectory called myapp
-#' runApp("myapp")
+#' shinyParallel::runApp("myapp")
 #' }
 #'
 #' ## Only run this example in interactive R sessions
@@ -67,13 +67,45 @@
 #'   options(device.ask.default = FALSE)
 #'
 #'   # Apps can be run without a server.r and ui.r file
-#'   runApp(list(
+#'   shinyParallel::runApp(list(
 #'     ui = bootstrapPage(
 #'       numericInput('n', 'Number of obs', 100),
 #'       plotOutput('plot')
 #'     ),
 #'     server = function(input, output) {
 #'       output$plot <- renderPlot({ hist(runif(input$n)) })
+#'     }
+#'   ))
+#'
+#'
+#'   # Another example
+#'   shinyParallel::runApp(list(
+#'     ui = fluidPage(column(3, wellPanel(
+#'       numericInput('n', label='Is it prime?', value=7, min=1),
+#'       actionButton('check', 'Check!')
+#'     ))),
+#'     server = function(input, output) {
+#'       # Check if n is prime.
+#'       # Not R optimized.
+#'       # No Fermat, Miller-Rabin, Solovay-Strassen, Frobenius, etc tests.
+#'       # Check if n is divisable up to n-1 !!
+#'       isPrime <- function(n) {
+#'         res <- !F;
+#'         i <- 2;
+#'         while (i < n) {
+#'           res <- res && n %% i !=0;
+#'           i <- i+1;
+#'         }
+#'         return(res);
+#'       }
+#'       observeEvent(input$check, {
+#'         showModal(modalDialog(
+#'           ifelse(isPrime(isolate(input$n)),
+#'             'Yes it is!', 'Nope, not a prime.'),
+#'           footer=NULL,
+#'           easyClose=!F
+#'         ))
+#'       })
 #'     }
 #'   ))
 #'
@@ -88,14 +120,14 @@
 #'       output$plot <- renderPlot({ hist(runif(input$n)) })
 #'     }
 #'   )
-#'   runApp(app)
+#'   shinyParallel::runApp(app)
 #' }
 #' @export
 #' @importFrom callr r_bg
 #' @importFrom shiny runApp
 runApp <- function(appDir=getwd(),
                    ports=getOption('shiny.ports'),
-                   max.sessions=getOption('shinyParallel.max.sessions', 2L),
+                   max.sessions=getOption('shinyParallel.max.sessions', 20L),
                    users.per.session=
                      getOption('shinyParallel.users.per.session', Inf),
                    launch.browser=getOption('shiny.launch.browser',
