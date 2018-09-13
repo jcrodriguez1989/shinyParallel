@@ -24,7 +24,7 @@ the only thing to do to run an app in multi-session mode is to call it using
 ShinyParallel is currently only available as a GitHub package. To install it run
 the following from an R console:
 
-```{installing eval=FALSE}
+```{r eval=FALSE}
 if (!require("devtools"))
   install.packages("devtools")
 devtools::install_github("jcrodriguez1989/shinyParallel")
@@ -34,13 +34,13 @@ devtools::install_github("jcrodriguez1989/shinyParallel")
 
 If you run your Shiny app like this:
 
-```{ eval=FALSE}
+```{r eval=FALSE}
 runApp(appDir=myApp, <otherParams>)
 ```
 
 Just replace it by:
 
-```{ eval=FALSE}
+```{r eval=FALSE}
 shinyParallel::runApp(appDir=myApp, <otherParams>)
 ```
 
@@ -57,7 +57,7 @@ La funcion shinyParallel::runApp tiene dos parametros adicionales:
 
 ## Example
 
-```{ eval=FALSE}
+```{r eval=FALSE}
 library("shiny");
 
 # Create a Shiny app object

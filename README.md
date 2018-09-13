@@ -19,7 +19,7 @@ Installation
 
 ShinyParallel is currently only available as a GitHub package. To install it run the following from an R console:
 
-``` installing
+``` r
 if (!require("devtools"))
   install.packages("devtools")
 devtools::install_github("jcrodriguez1989/shinyParallel")
@@ -30,13 +30,13 @@ Usage
 
 If you run your Shiny app like this:
 
-```
+``` r
 runApp(appDir=myApp, <otherParams>)
 ```
 
 Just replace it by:
 
-```
+``` r
 shinyParallel::runApp(appDir=myApp, <otherParams>)
 ```
 
@@ -50,7 +50,7 @@ La funcion shinyParallel::runApp tiene dos parametros adicionales:
 Example
 -------
 
-```
+``` r
 library("shiny");
 
 # Create a Shiny app object
