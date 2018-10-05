@@ -147,4 +147,3 @@ if (interactive()) {
   shinyParallel::runApp(app)
 }
 }
-
