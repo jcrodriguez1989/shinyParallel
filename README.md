@@ -1,28 +1,38 @@
 ShinyParallel
 ================
 
-Run [Shiny](http://shiny.rstudio.com/) applications in a multi-session mode.
+Run [Shiny](http://shiny.rstudio.com/) applications in a multi-session
+mode.
 
-Prevents that if a user executes a long computing task penalizing others.
+Prevents that if a user executes a long computing task penalizing
+others.
 
-ShinyParallel manages incoming users and redistributes them between multiple sessions created for your Shiny app. It provides two modes of use:
+ShinyParallel manages incoming users and redistributes them between
+multiple sessions created for your Shiny app. It provides two modes of
+use:
 
--   From an R console: ShinyParallel reimplements the function *shiny::runApp(&lt;params&gt;)*. In this sense, the only thing to do to run an app in multi-session mode is to call it using *shinyParallel::runApp(&lt;params&gt;)*.
--   Installing ShinyParallel in a Shiny server (**may require root**): by the *shinyParallel::installShinyParallel(&lt;params&gt;)* function, ShinyParallel is installed in your Shiny server for any desired app.
+  - From an R console: ShinyParallel reimplements the function
+    *shiny::runApp(\<params\>)*. In this sense, the only thing to do to
+    run an app in multi-session mode is to call it using
+    *shinyParallel::runApp(\<params\>)*.
+  - Installing ShinyParallel in a Shiny server (**may require root**):
+    by the *shinyParallel::installShinyParallel(\<params\>)* function,
+    ShinyParallel is installed in your Shiny server for any desired app.
 
-**Note:** ShinyParallel should work on any operating system that supports R, however it has been tested only under Linux (Ubuntu).
+**Note:** ShinyParallel should work on any operating system that
+supports R, however it has been tested only under Linux (Ubuntu).
 
-Features
---------
+## Features
 
--   Run a Shiny app in multiple sessions (processes / physical cores).
--   Decide the maximum number of users per session.
--   It allows to visualize the number of users currently present in each session.
+  - Run a Shiny app in multiple sessions (processes / physical cores).
+  - Decide the maximum number of users per session.
+  - It allows to visualize the number of users currently present in each
+    session.
 
-Installation
-------------
+## Installation
 
-ShinyParallel is currently only available as a GitHub package. To install it run the following from an R console:
+ShinyParallel is currently only available as a GitHub package. To
+install it run the following from an R console:
 
 ``` r
 if (!require("devtools"))
@@ -30,8 +40,7 @@ if (!require("devtools"))
 devtools::install_github("jcrodriguez1989/shinyParallel")
 ```
 
-runApp mode
------------
+## runApp mode
 
 ### Usage
 
@@ -47,12 +56,17 @@ Just replace it by:
 shinyParallel::runApp(appDir=myApp, <otherParams>)
 ```
 
-The only parameter that varies is *port*, in shinyParallel::runApp the parameter is modified by *ports*. And instead of being *numeric* of length 1, it will now be numeric of length equal to the number of ports available to use. Where the first port will be used by the ShinyParallel app, and the rest by the generated sessions.
+The only parameter that varies is *port*, in shinyParallel::runApp the
+parameter is modified by *ports*. And instead of being *numeric* of
+length 1, it will now be numeric of length equal to the number of ports
+available to use. Where the first port will be used by the ShinyParallel
+app, and the rest by the generated sessions.
 
 La funcion shinyParallel::runApp tiene dos parametros adicionales:
 
--   *max.sessions*: Maximum number of sessions to use.
--   *users.per.session*: Maximum number of admited users per each session.
+  - *max.sessions*: Maximum number of sessions to use.
+  - *users.per.session*: Maximum number of admited users per each
+    session.
 
 ### Example
 
@@ -102,20 +116,28 @@ shinyParallel::runApp(app);
 shinyParallel::runApp(app, max.sessions=Inf, users.per.session=1);
 ```
 
-In this example, if the app is run with shiny::runApp, and a user wants to calculate if the number 179424691 is prime then the app will be blocked for other users for some minutes, if the app is run with shinyParallel::runApp not.
+In this example, if the app is run with shiny::runApp, and a user wants
+to calculate if the number 179424691 is prime then the app will be
+blocked for other users for some minutes, if the app is run with
+shinyParallel::runApp not.
 
-If the shiny app url is `http://<url>:<port>/` then enter `http://<url>:<port>/?admin` to view a panel that lists the number of users currently present in each session.
+If the shiny app url is `http://<url>:<port>/` then enter
+`http://<url>:<port>/?admin` to view a panel that lists the number of
+users currently present in each session.
 
-installShinyParallel mode
--------------------------
+## installShinyParallel mode
 
 ### Usage
 
-If your application is at `<myAppPath>`, i.e., from an R terminal `runApp(<myAppPath>)` starts the app, then to install it on the server just run R as root (or make sure the actual user has write permissions on the Shiny server) and run the `installShinyParallel(<myAppPath>)` command.
+If your application is at `<myAppPath>`, i.e., from an R terminal
+`runApp(<myAppPath>)` starts the app, then to install it on the server
+just run R as root (or make sure the actual user has write permissions
+on the Shiny server) and run the `installShinyParallel(<myAppPath>)`
+command.
 
 ### Example
 
-First, let's create our Shiny app, from a Linux terminal type:
+First, let’s create our Shiny app, from a Linux terminal type:
 
 ``` bash
 cd ~;
@@ -158,17 +180,22 @@ echo "
 " > myShinyApp/app.R;
 ```
 
-So now we can try our app, and install it with multi-session feature, from a R (sudo) console type:
+So now we can try our app, and install it with multi-session feature,
+from a R (sudo) console type:
+
+**Note**: Replace **MY\_USER** by your username.
 
 ``` r
 library('shinyParallel');
 
 # And install it
-shinyParallel::installShinyParallel('~/myShinyApp', max.sessions=20,
+shinyParallel::installShinyParallel('/home/MY_USER/myShinyApp', max.sessions=20,
                                     users.per.session=5);
 ```
 
-Limitations
------------
+## Limitations
 
--   Each session that ShinyParallel generates is independent of the others, i.e., the global variables of a session (shiny app) will not be modified in another one. Two users present in different session will not be able to interact with the same values of the variables.
+  - Each session that ShinyParallel generates is independent of the
+    others, i.e., the global variables of a session (shiny app) will not
+    be modified in another one. Two users present in different session
+    will not be able to interact with the same values of the variables.

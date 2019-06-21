@@ -177,11 +177,13 @@ echo "
 So now we can try our app, and install it with multi-session feature, from a R 
 (sudo) console type:
 
+**Note**: Replace **MY_USER** by your username.
+
 ```{r eval=F}
 library('shinyParallel');
 
 # And install it
-shinyParallel::installShinyParallel('~/myShinyApp', max.sessions=20,
+shinyParallel::installShinyParallel('/home/MY_USER/myShinyApp', max.sessions=20,
                                     users.per.session=5);
 ```
 
