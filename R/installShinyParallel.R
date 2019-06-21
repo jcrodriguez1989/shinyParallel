@@ -52,6 +52,8 @@ installShinyParallel <- function(appDir=getwd(),
     if (appName == '')
         stop('Please provide appName.');
     
+    appDir <- normalizePath(appDir)
+    
     ## copy shinyServer files
     print('Copying shinyParallel server files.');
     
