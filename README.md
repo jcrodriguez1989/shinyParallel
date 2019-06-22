@@ -12,11 +12,11 @@ multiple sessions created for your Shiny app. It provides two modes of
 use:
 
   - From an R console: ShinyParallel reimplements the function
-    *shiny::runApp(\<params\>)*. In this sense, the only thing to do to
+    `shiny::runApp(<params>)`. In this sense, the only thing to do to
     run an app in multi-session mode is to call it using
-    *shinyParallel::runApp(\<params\>)*.
+    `shinyParallel::runApp(<params>)`.
   - Installing ShinyParallel in a Shiny server (**may require root**):
-    by the *shinyParallel::installShinyParallel(\<params\>)* function,
+    by the `shinyParallel::installShinyParallel(<params>)` function,
     ShinyParallel is installed in your Shiny server for any desired app.
 
 **Note:** ShinyParallel should work on any operating system that
@@ -35,9 +35,9 @@ ShinyParallel is currently only available as a GitHub package. To
 install it run the following from an R console:
 
 ``` r
-if (!require("devtools"))
-  install.packages("devtools")
-devtools::install_github("jcrodriguez1989/shinyParallel")
+if (!require("remotes"))
+  install.packages("remotes")
+remotes::install_github("jcrodriguez1989/shinyParallel")
 ```
 
 ## runApp mode
@@ -56,16 +56,16 @@ Just replace it by:
 shinyParallel::runApp(appDir=myApp, <otherParams>)
 ```
 
-The only parameter that varies is *port*, in shinyParallel::runApp the
-parameter is modified by *ports*. And instead of being *numeric* of
+The only parameter that varies is `port`, in `shinyParallel::runApp` the
+parameter is modified by `ports`. And instead of being `numeric` of
 length 1, it will now be numeric of length equal to the number of ports
 available to use. Where the first port will be used by the ShinyParallel
 app, and the rest by the generated sessions.
 
-La funcion shinyParallel::runApp tiene dos parametros adicionales:
+The `shinyParallel::runApp` function has two additional parameters:
 
-  - *max.sessions*: Maximum number of sessions to use.
-  - *users.per.session*: Maximum number of admited users per each
+  - `max.sessions`: Maximum number of sessions to use.
+  - `users.per.session`: Maximum number of admited users per each
     session.
 
 ### Example
@@ -116,10 +116,10 @@ shinyParallel::runApp(app);
 shinyParallel::runApp(app, max.sessions=Inf, users.per.session=1);
 ```
 
-In this example, if the app is run with shiny::runApp, and a user wants
-to calculate if the number 179424691 is prime then the app will be
+In this example, if the app is run with `shiny::runApp`, and a user
+wants to calculate if the number 179424691 is prime then the app will be
 blocked for other users for some minutes, if the app is run with
-shinyParallel::runApp not.
+`shinyParallel::runApp` not.
 
 If the shiny app url is `http://<url>:<port>/` then enter
 `http://<url>:<port>/?admin` to view a panel that lists the number of
@@ -183,14 +183,13 @@ echo "
 So now we can try our app, and install it with multi-session feature,
 from a R (sudo) console type:
 
-**Note**: Replace **MY\_USER** by your username.
-
 ``` r
-library('shinyParallel');
-
+library("shinyParallel")
 # And install it
-shinyParallel::installShinyParallel('/home/MY_USER/myShinyApp', max.sessions=20,
-                                    users.per.session=5);
+shinyParallel::installShinyParallel("./myShinyApp",
+  max.sessions = 20,
+  users.per.session = 5
+)
 ```
 
 ## Limitations
