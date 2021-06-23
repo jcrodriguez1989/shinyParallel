@@ -11,11 +11,11 @@ ShinyParallel manages incoming users and redistributes them between
 multiple sessions created for your Shiny app. It provides two modes of
 use:
 
-  - From an R console: ShinyParallel reimplements the function
+-   From an R console: ShinyParallel reimplements the function
     `shiny::runApp(<params>)`. In this sense, the only thing to do to
     run an app in multi-session mode is to call it using
     `shinyParallel::runApp(<params>)`.
-  - Installing ShinyParallel in a Shiny server (**may require root**):
+-   Installing ShinyParallel in a Shiny server (**may require root**):
     by the `shinyParallel::installShinyParallel(<params>)` function,
     ShinyParallel is installed in your Shiny server for any desired app.
 
@@ -24,9 +24,9 @@ supports R, however it has been tested only under Linux (Ubuntu).
 
 ## Features
 
-  - Run a Shiny app in multiple sessions (processes / physical cores).
-  - Decide the maximum number of users per session.
-  - It allows to visualize the number of users currently present in each
+-   Run a Shiny app in multiple sessions (processes / physical cores).
+-   Decide the maximum number of users per session.
+-   It allows to visualize the number of users currently present in each
     session.
 
 ## Installation
@@ -35,8 +35,9 @@ ShinyParallel is currently only available as a GitHub package. To
 install it run the following from an R console:
 
 ``` r
-if (!require("remotes"))
+if (!require("remotes")) {
   install.packages("remotes")
+}
 remotes::install_github("jcrodriguez1989/shinyParallel")
 ```
 
@@ -64,56 +65,55 @@ app, and the rest by the generated sessions.
 
 The `shinyParallel::runApp` function has two additional parameters:
 
-  - `max.sessions`: Maximum number of sessions to use.
-  - `users.per.session`: Maximum number of admited users per each
+-   `max.sessions`: Maximum number of sessions to use.
+-   `users.per.session`: Maximum number of admited users per each
     session.
 
 ### Example
 
 ``` r
-library("shiny");
+library("shiny")
 
 # Create a Shiny app object
 app <- shinyApp(
   ui = fluidPage(
     column(3, wellPanel(
-      numericInput('n', label='Is it prime?', value=7, min=1),
-      actionButton('check', 'Check!')
-    )
-  )),
+      numericInput("n", label = "Is it prime?", value = 7, min = 1),
+      actionButton("check", "Check!")
+    ))
+  ),
   server = function(input, output) {
     # Check if n is prime.
     # Not R optimized.
     # No Fermat, Miller-Rabin, Solovay-Strassen, Frobenius, etc tests.
     # Check if n is divisable up to n-1 !!
     isPrime <- function(n) {
-      res <- !F;
-      i <- 2;
+      res <- TRUE
+      i <- 2
       while (i < n) {
-        res <- res && n %% i !=0;
-        i <- i+1;
+        res <- res && n %% i != 0
+        i <- i + 1
       }
-      return(res);
+      return(res)
     }
     observeEvent(input$check, {
       showModal(modalDialog(
         ifelse(isPrime(isolate(input$n)),
-            'Yes it is!', 'Nope, not a prime.'),
-        footer=NULL,
-        easyClose=!F
+          "Yes it is!", "Nope, not a prime."
+        ),
+        footer = NULL,
+        easyClose = TRUE
       ))
     })
   }
 )
 
 # Run it with Shiny
-shiny::runApp(app);
-
+shiny::runApp(app)
 # Run it with ShinyParallel default params
-shinyParallel::runApp(app);
-
+shinyParallel::runApp(app)
 # Run it with ShinyParallel, give one session per user
-shinyParallel::runApp(app, max.sessions=Inf, users.per.session=1);
+shinyParallel::runApp(app, max.sessions = Inf, users.per.session = 1)
 ```
 
 In this example, if the app is run with `shiny::runApp`, and a user
@@ -149,7 +149,7 @@ echo "
     app <- shinyApp(
       ui = fluidPage(
         column(3, wellPanel(
-          numericInput('n', label='Is it prime?', value=7, min=1),
+          numericInput('n', label = 'Is it prime?', value = 7, min = 1),
           actionButton('check', 'Check!')
         )
       )),
@@ -163,7 +163,7 @@ echo "
           i <- 2;
           while (i < n) {
             res <- res && n %% i != 0;
-            i <- i+1;
+            i <- i + 1;
           }
           return(res);
         }
@@ -171,8 +171,8 @@ echo "
           showModal(modalDialog(
             ifelse(isPrime(isolate(input\$n)),
                 'Yes it is!', 'Nope, not a prime.'),
-            footer=NULL,
-            easyClose=TRUE
+            footer = NULL,
+            easyClose = TRUE
           ))
         })
       }
@@ -194,7 +194,7 @@ shinyParallel::installShinyParallel("./myShinyApp",
 
 ## Limitations
 
-  - Each session that ShinyParallel generates is independent of the
+-   Each session that ShinyParallel generates is independent of the
     others, i.e., the global variables of a session (shiny app) will not
     be modified in another one. Two users present in different session
     will not be able to interact with the same values of the variables.

@@ -4,10 +4,13 @@
 \alias{installShinyParallel}
 \title{Installs a multi-session Shiny app in a server}
 \usage{
-installShinyParallel(appDir = getwd(), appName = basename(appDir),
+installShinyParallel(
+  appDir = getwd(),
+  appName = basename(appDir),
   max.sessions = getOption("shinyParallel.max.sessions", 20L),
   users.per.session = getOption("shinyParallel.users.per.session", Inf),
-  shinyServerPath = "/srv/shiny-server/")
+  shinyServerPath = "/srv/shiny-server/"
+)
 }
 \arguments{
 \item{appDir}{The application to run. Should be one of the following:
@@ -42,6 +45,6 @@ save and load data on hard disk (or use RStudio server pro).
 # shinyParallel::runApp('~/myShinyApp');
 
 # then we can install the app by typing
-shinyParallel::installShinyParallel('~/myShinyApp');
+shinyParallel::installShinyParallel("~/myShinyApp")
 }
 }

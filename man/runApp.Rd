@@ -4,13 +4,18 @@
 \alias{runApp}
 \title{Run Shiny Application}
 \usage{
-runApp(appDir = getwd(), ports = getOption("shiny.ports"),
+runApp(
+  appDir = getwd(),
+  ports = getOption("shiny.ports"),
   max.sessions = getOption("shinyParallel.max.sessions", 20L),
   users.per.session = getOption("shinyParallel.users.per.session", Inf),
   launch.browser = getOption("shiny.launch.browser", interactive()),
-  host = getOption("shiny.host", "127.0.0.1"), workerId = "",
-  quiet = FALSE, display.mode = c("auto", "normal", "showcase"),
-  test.mode = getOption("shiny.testmode", FALSE))
+  host = getOption("shiny.host", "127.0.0.1"),
+  workerId = "",
+  quiet = FALSE,
+  display.mode = c("auto", "normal", "showcase"),
+  test.mode = getOption("shiny.testmode", FALSE)
+)
 }
 \arguments{
 \item{appDir}{The application to run. Should be one of the following:
@@ -93,11 +98,13 @@ if (interactive()) {
   # Apps can be run without a server.r and ui.r file
   shinyParallel::runApp(list(
     ui = bootstrapPage(
-      numericInput('n', 'Number of obs', 100),
-      plotOutput('plot')
+      numericInput("n", "Number of obs", 100),
+      plotOutput("plot")
     ),
     server = function(input, output) {
-      output$plot <- renderPlot({ hist(runif(input$n)) })
+      output$plot <- renderPlot({
+        hist(runif(input$n))
+      })
     }
   ))
 
@@ -105,8 +112,8 @@ if (interactive()) {
   # Another example
   shinyParallel::runApp(list(
     ui = fluidPage(column(3, wellPanel(
-      numericInput('n', label='Is it prime?', value=7, min=1),
-      actionButton('check', 'Check!')
+      numericInput("n", label = "Is it prime?", value = 7, min = 1),
+      actionButton("check", "Check!")
     ))),
     server = function(input, output) {
       # Check if n is prime.
@@ -114,20 +121,21 @@ if (interactive()) {
       # No Fermat, Miller-Rabin, Solovay-Strassen, Frobenius, etc tests.
       # Check if n is divisable up to n-1 !!
       isPrime <- function(n) {
-        res <- !F;
-        i <- 2;
+        res <- TRUE
+        i <- 2
         while (i < n) {
-          res <- res && n \%\% i !=0;
-          i <- i+1;
+          res <- res && n \%\% i != 0
+          i <- i + 1
         }
-        return(res);
+        return(res)
       }
       observeEvent(input$check, {
         showModal(modalDialog(
           ifelse(isPrime(isolate(input$n)),
-            'Yes it is!', 'Nope, not a prime.'),
-          footer=NULL,
-          easyClose=!F
+            "Yes it is!", "Nope, not a prime."
+          ),
+          footer = NULL,
+          easyClose = TRUE
         ))
       })
     }
@@ -137,11 +145,13 @@ if (interactive()) {
   # Running a Shiny app object
   app <- shinyApp(
     ui = bootstrapPage(
-      numericInput('n', 'Number of obs', 100),
-      plotOutput('plot')
+      numericInput("n", "Number of obs", 100),
+      plotOutput("plot")
     ),
     server = function(input, output) {
-      output$plot <- renderPlot({ hist(runif(input$n)) })
+      output$plot <- renderPlot({
+        hist(runif(input$n))
+      })
     }
   )
   shinyParallel::runApp(app)

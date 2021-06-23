@@ -69,11 +69,13 @@
 #'   # Apps can be run without a server.r and ui.r file
 #'   shinyParallel::runApp(list(
 #'     ui = bootstrapPage(
-#'       numericInput('n', 'Number of obs', 100),
-#'       plotOutput('plot')
+#'       numericInput("n", "Number of obs", 100),
+#'       plotOutput("plot")
 #'     ),
 #'     server = function(input, output) {
-#'       output$plot <- renderPlot({ hist(runif(input$n)) })
+#'       output$plot <- renderPlot({
+#'         hist(runif(input$n))
+#'       })
 #'     }
 #'   ))
 #'
@@ -81,8 +83,8 @@
 #'   # Another example
 #'   shinyParallel::runApp(list(
 #'     ui = fluidPage(column(3, wellPanel(
-#'       numericInput('n', label='Is it prime?', value=7, min=1),
-#'       actionButton('check', 'Check!')
+#'       numericInput("n", label = "Is it prime?", value = 7, min = 1),
+#'       actionButton("check", "Check!")
 #'     ))),
 #'     server = function(input, output) {
 #'       # Check if n is prime.
@@ -90,20 +92,21 @@
 #'       # No Fermat, Miller-Rabin, Solovay-Strassen, Frobenius, etc tests.
 #'       # Check if n is divisable up to n-1 !!
 #'       isPrime <- function(n) {
-#'         res <- !F;
-#'         i <- 2;
+#'         res <- TRUE
+#'         i <- 2
 #'         while (i < n) {
-#'           res <- res && n %% i !=0;
-#'           i <- i+1;
+#'           res <- res && n %% i != 0
+#'           i <- i + 1
 #'         }
-#'         return(res);
+#'         return(res)
 #'       }
 #'       observeEvent(input$check, {
 #'         showModal(modalDialog(
 #'           ifelse(isPrime(isolate(input$n)),
-#'             'Yes it is!', 'Nope, not a prime.'),
-#'           footer=NULL,
-#'           easyClose=!F
+#'             "Yes it is!", "Nope, not a prime."
+#'           ),
+#'           footer = NULL,
+#'           easyClose = TRUE
 #'         ))
 #'       })
 #'     }
@@ -113,11 +116,13 @@
 #'   # Running a Shiny app object
 #'   app <- shinyApp(
 #'     ui = bootstrapPage(
-#'       numericInput('n', 'Number of obs', 100),
-#'       plotOutput('plot')
+#'       numericInput("n", "Number of obs", 100),
+#'       plotOutput("plot")
 #'     ),
 #'     server = function(input, output) {
-#'       output$plot <- renderPlot({ hist(runif(input$n)) })
+#'       output$plot <- renderPlot({
+#'         hist(runif(input$n))
+#'       })
 #'     }
 #'   )
 #'   shinyParallel::runApp(app)
@@ -125,18 +130,20 @@
 #' @export
 #' @importFrom callr r_bg
 #' @importFrom shiny runApp
-runApp <- function(appDir=getwd(),
-                   ports=getOption('shiny.ports'),
-                   max.sessions=getOption('shinyParallel.max.sessions', 20L),
-                   users.per.session=
-                     getOption('shinyParallel.users.per.session', Inf),
-                   launch.browser=getOption('shiny.launch.browser',
-                                            interactive()),
-                   host=getOption('shiny.host', '127.0.0.1'),
-                   workerId="",
-                   quiet=FALSE,
-                   display.mode=c('auto', 'normal', 'showcase'),
-                   test.mode=getOption('shiny.testmode', FALSE)) {
+runApp <- function(appDir = getwd(),
+                   ports = getOption("shiny.ports"),
+                   max.sessions = getOption("shinyParallel.max.sessions", 20L),
+                   users.per.session =
+                     getOption("shinyParallel.users.per.session", Inf),
+                   launch.browser = getOption(
+                     "shiny.launch.browser",
+                     interactive()
+                   ),
+                   host = getOption("shiny.host", "127.0.0.1"),
+                   workerId = "",
+                   quiet = FALSE,
+                   display.mode = c("auto", "normal", "showcase"),
+                   test.mode = getOption("shiny.testmode", FALSE)) {
   # args distribution:
   # appDir          (shiny)
   # ports           (both) must be a vector of ports, one per session
@@ -147,28 +154,37 @@ runApp <- function(appDir=getwd(),
   # display.mode    (shiny)
   # test.mode       (shiny)
 
-  if (!(max.sessions > 0 && users.per.session > 0))
-    stop('max.sessions and users.per.session must be greater than 0.');
+  if (!(max.sessions > 0 && users.per.session > 0)) {
+    stop("max.sessions and users.per.session must be greater than 0.")
+  }
 
   # we need one port for the server, and n ports for n sessions
-  if (length(ports) > 0 && length(ports) < (max.sessions+1))
-    stop('Must give at least max.sessions + 1 ports.');
+  if (length(ports) > 0 && length(ports) < (max.sessions + 1)) {
+    stop("Must give at least max.sessions + 1 ports.")
+  }
 
   # args to be used by each shiny created session
   env2save <- as.list(environment())[
-    c('appDir', 'ports', 'max.sessions', 'users.per.session', 'host',
-      'workerId', 'display.mode', 'test.mode')];
+    c(
+      "appDir", "ports", "max.sessions", "users.per.session", "host",
+      "workerId", "display.mode", "test.mode"
+    )
+  ]
 
   # try to load the shinyParallel server app
-  serverAppDir <- system.file('shiny', 'shinyParallelServer',
-                              package='shinyParallel');
-  if (serverAppDir == '')
-    stop('Could not find GUI directory. Try re-installing `shinyParallel`.');
+  serverAppDir <- system.file("shiny", "shinyParallelServer",
+    package = "shinyParallel"
+  )
+  if (serverAppDir == "") {
+    stop("Could not find GUI directory. Try re-installing `shinyParallel`.")
+  }
 
   # the shiny app will run with the same tempdir, so in this way we can pass
   # the environment
-  save(env2save, file=paste0(tempdir(), '/env.RData'));
-  shiny::runApp(appDir=serverAppDir, port=ports[[1]],
-                launch.browser=launch.browser, host=host, workerId=workerId,
-                quiet=quiet);
+  save(env2save, file = paste0(tempdir(), "/env.RData"))
+  shiny::runApp(
+    appDir = serverAppDir, port = ports[[1]],
+    launch.browser = launch.browser, host = host, workerId = workerId,
+    quiet = quiet
+  )
 }
