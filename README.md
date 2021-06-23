@@ -140,10 +140,10 @@ command.
 First, let’s create our Shiny app, from a Linux terminal type:
 
 ``` bash
-cd ~;
-mkdir myShinyApp;
+cd ~
+mkdir myShinyApp
 echo "
-    library('shiny');
+    library('shiny')
     
     # Create a Shiny app object
     app <- shinyApp(
@@ -159,13 +159,13 @@ echo "
         # No Fermat, Miller-Rabin, Solovay-Strassen, Frobenius, etc tests.
         # Check if n is divisable up to n-1 !!
         isPrime <- function(n) {
-          res <- TRUE;
-          i <- 2;
+          res <- TRUE
+          i <- 2
           while (i < n) {
-            res <- res && n %% i != 0;
-            i <- i + 1;
+            res <- res && n %% i != 0
+            i <- i + 1
           }
-          return(res);
+          return(res)
         }
         observeEvent(input\$check, {
           showModal(modalDialog(
@@ -177,7 +177,7 @@ echo "
         })
       }
     )
-" > myShinyApp/app.R;
+" > myShinyApp/app.R
 ```
 
 So now we can try our app, and install it with multi-session feature,
